@@ -64,7 +64,7 @@ async def main(request: Request):
 
 
 @note_router.get("/images", response_class=HTMLResponse)
-def list_files(request: Request):
+async def list_files(request: Request):
 
     files = os.listdir("./static")
     files_paths = sorted([f"{f}" for f in files])
@@ -73,12 +73,8 @@ def list_files(request: Request):
     )
 
 @note_router.get("/login", response_class=HTMLResponse)
-def list_files(request: Request):
+async def list_files(request: Request):
     form = await request.form()
-    print(form['userid'])
-    print(form['userpass'])
-    # files = os.listdir("./static")
-    # files_paths = sorted([f"{f}" for f in files])
     return templates.TemplateResponse(
         "Login.html", {"request": request}
     )
