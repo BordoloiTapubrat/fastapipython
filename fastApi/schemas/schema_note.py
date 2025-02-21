@@ -8,3 +8,6 @@ def note_entity(item) -> dict:
 
 def note_entity_list(items)->list:
     return [note_entity(item) for item in items]
+
+def uploadMessage(msg):
+    return msg
