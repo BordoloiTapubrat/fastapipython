@@ -48,6 +48,7 @@ async def post_endpoint(request: Request):
     #return {"message": f"Successfully uploaded {filename} file size {file_size}"}
     #return templates.TemplateResponse("index.html", {"request": request,"message": f"Successfully uploaded {filename} file size {file_size}"})
     print(status)
+
     if status:
         out_file.close()
         return templates.TemplateResponse(request=request, name="index.html",context={"files": files_paths,"message":uploadMessage(f"Successfully uploaded {filename}")})
