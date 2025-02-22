@@ -6,7 +6,8 @@
 3. Packages - pip install fastapi ,  pip install Jinja2, pip install aiofiles
 4. Mongo DB
 
-# Start - fastapi dev index.py
+# Start - 
+fastapi dev index.py
 
 # API's
 http://127.0.0.1:8000/docs
