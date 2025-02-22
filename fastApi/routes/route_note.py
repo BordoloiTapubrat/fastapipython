@@ -5,7 +5,7 @@ from fastapi import APIRouter, Request, UploadFile, status, HTTPException, File
 from fastapi.responses import HTMLResponse
 from models.model_note import NoteModel
 from config.db import conn
-from schemas.schema_note import note_entity, note_entity_list, uploadMessage
+from schemas.schema_note import note_entity, note_entity_list, uploadMessage, loginState, loginData
 from fastapi.templating import Jinja2Templates
 import magic
 import aiofiles
@@ -25,6 +25,8 @@ SUPPORTED_FILE_TYPES ={
 @note_router.post("/upload")
 async def post_endpoint(request: Request):
     try:
+        files = os.listdir("./static")
+        files_paths = sorted([f"{f}" for f in files])
         random_name = uuid.uuid4()
         form = await request.form()
         filename = form['file'].filename
@@ -48,11 +50,11 @@ async def post_endpoint(request: Request):
     print(status)
     if status:
         out_file.close()
-        return templates.TemplateResponse(request=request, name="index.html",context={"message":uploadMessage(f"Successfully uploaded {filename}")})
+        return templates.TemplateResponse(request=request, name="index.html",context={"files": files_paths,"message":uploadMessage(f"Successfully uploaded {filename}")})
     else:
         return templates.TemplateResponse(request=request, name="index.html",
-                                          context={"message": uploadMessage(f"Failed To uploaded. File Size State - {fileSizeState}")})
-@note_router.get("/")
+                                          context={"files": files_paths,"message": uploadMessage(f"Failed To uploaded. File Size State - {fileSizeState}")})
+@note_router.get("/refresh")
 async def main(request: Request):
     files = os.listdir("./static")
     files_paths = sorted([f"{f}" for f in files])
@@ -61,20 +63,45 @@ async def main(request: Request):
         "index.html", {"request": request, "files": files_paths}
     )
 
-
-
-@note_router.get("/images", response_class=HTMLResponse)
-async def list_files(request: Request):
-
-    files = os.listdir("./static")
-    files_paths = sorted([f"{f}" for f in files])
+@note_router.get("/")
+async def main(request: Request):
+    # files = os.listdir("./static")
+    # files_paths = sorted([f"{f}" for f in files])
     return templates.TemplateResponse(
-        "images.html", {"request": request, "files": files_paths}
+        "Login.html", {"request": request}
+
+    # return templates.TemplateResponse(
+    #     "index.html", {"request": request, "files": files_paths}
     )
 
-@note_router.get("/login", response_class=HTMLResponse)
-async def list_files(request: Request):
+
+
+# @note_router.get("/images", response_class=HTMLResponse)
+# async def list_files(request: Request):
+#
+#     files = os.listdir("./static")
+#     files_paths = sorted([f"{f}" for f in files])
+#     return templates.TemplateResponse(
+#         "images.html", {"request": request, "files": files_paths}
+#     )
+
+@note_router.post("/imageprocessing", response_class=HTMLResponse)
+async def login(request: Request):
+    files = os.listdir("./static")
+    files_paths = sorted([f"{f}" for f in files])
     form = await request.form()
+    formDict = dict(form)
+    print(formDict["userid"])
+    print(formDict["userpass"])
+    return templates.TemplateResponse(request=request, name="index.html",context={"files": files_paths,"logindetails":loginData(formDict)})
+    # return templates.TemplateResponse(
+    #     "index.html", {"request": request}
+    # return templates.TemplateResponse(request=request, name="index.html",
+    #                                   context={"message": loginState(
+    #                                       f"UserName {userid} Password {userpass}")})
+
+@note_router.get("/SignIn", response_class=HTMLResponse)
+async def signIn(request: Request):
     return templates.TemplateResponse(
         "Login.html", {"request": request}
     )
