@@ -100,11 +100,11 @@ async def login(request: Request):
     #                                   context={"message": loginState(
     #                                       f"UserName {userid} Password {userpass}")})
 
-@note_router.get("/SignIn", response_class=HTMLResponse)
-async def signIn(request: Request):
-    return templates.TemplateResponse(
-        "Login.html", {"request": request}
-    )
+# @note_router.get("/SignIn", response_class=HTMLResponse)
+# async def signIn(request: Request):
+#     return templates.TemplateResponse(
+#         "Login.html", {"request": request}
+#     )
 
 async def validate_file_size(file: UploadFile):
     file_size =file.size
